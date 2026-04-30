@@ -32,7 +32,7 @@ def buscalibre_price_tracker(
     print("Books number: ", len(books))
     pending_book = next(books_provider.get_next_book(books=books))
     if pending_book is not None:
-        print("Running scraper for book: ", pending_book.id)
+        print("Running scraper for book: ", pending_book.id, pending_book.title)
         try:
             book_info = scraper.scrape_book_price_history(url=pending_book.link, book_id=pending_book.id.value)
         except Exception as e:
@@ -46,18 +46,20 @@ def buscalibre_price_tracker(
                 print("Saving price for book: ", pending_book.id)
                 _BOOKS_REPOSITORY.save(new_item=pending_book)
                 _BOOK_HISTORY_REPOSITORY.save(new_item=book_info)
+            else:
+                print("Price information already exist")
         else:
             pending_book.calculate_price_by_price_history(price_history_item=book_info)
             print("Saving price for book: ", pending_book.id)
             _BOOKS_REPOSITORY.save(new_item=pending_book)
             _BOOK_HISTORY_REPOSITORY.save(new_item=book_info)
 
-        for book in books:
-            books_history = _BOOK_HISTORY_REPOSITORY.find_by(find={"book_id": book.id.value},
-                                                             sort_by="requested_at", descending=True)
-            if item := next(books_history, None):
-                print(f"Se consulto nueva informacion sobre el libro: {book.id.value}")
-                print(item.model_dump())
+        # for book in books:
+        #     books_history = _BOOK_HISTORY_REPOSITORY.find_by(find={"book_id": book.id.value},
+        #                                                      sort_by="requested_at", descending=True)
+        #     if item := next(books_history, None):
+        #         print(f"Se consulto nueva informacion sobre el libro: {book.id.value}")
+        #         print(item.model_dump())
 
 def get_books(uow: unit_of_work.AbstractUnitOfWork) -> commands.GetBooksResponse:
     _BOOKS_REPOSITORY = uow.get_repo(entity_type=buscalibre.Book)
