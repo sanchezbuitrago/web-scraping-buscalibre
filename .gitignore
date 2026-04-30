@@ -1,0 +1,33 @@
+# --- Entornos Virtuales ---
+.venv/
+venv/
+env/
+bin/
+lib/
+include/
+
+# --- Artefactos de Construcción (Builds) ---
+*.egg-info/
+build/
+dist/
+eggs/
+.eggs/
+
+# --- Caché de Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Variables de Entorno (SEGURIDAD) ---
+.env
+.env.local
+
+# --- IDEs y Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs y Bases de Datos Temporales ---
+*.log
+*.sqlite
