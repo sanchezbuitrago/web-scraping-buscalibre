@@ -6,8 +6,8 @@ from domain.services import scraper
 from commons import unit_of_work
 from commons.adapters import mongo_uow
 
-_DEFAULT_TIME_TO_RUN_SCRIPT_IN_SECONDS = 10
-_DEFAULT_TIME_TO_SLEEP_IN_SECONDS = 5
+_DEFAULT_TIME_TO_RUN_SCRIPT_IN_SECONDS = 30
+_DEFAULT_TIME_TO_SLEEP_IN_SECONDS = 15
 
 _SCRAPER = scraper.BuscaLibreScraper()
 _UOW = unit_of_work.AbstractUnitOfWork = mongo_uow.MongoUOW()

@@ -4,7 +4,7 @@ from domain.model import buscalibre, commands
 from domain.services import provider, scraper as scraper_service
 from commons import unit_of_work
 
-_DEFAULT_RETENTION_TIME_LINKS = timedelta(minutes=1)
+_DEFAULT_RETENTION_TIME_LINKS = timedelta(minutes=30)
 
 
 books_provider = provider.BookProvider(retention_time=_DEFAULT_RETENTION_TIME_LINKS)
