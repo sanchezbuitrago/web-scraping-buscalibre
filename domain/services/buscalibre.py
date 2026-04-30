@@ -38,6 +38,8 @@ def buscalibre_price_tracker(
         except Exception as e:
             print(f"Error obteniedo datos de buscalibre: Book ID : [{pending_book.id.value}], Titulo: [{pending_book.title}], Link:[{pending_book.link}]")
             print(e)
+            pending_book.save_book_error(error="Error running scraper")
+            _BOOKS_REPOSITORY.save(new_item=pending_book)
             return
 
         if book_last_price := next(_BOOK_HISTORY_REPOSITORY.find_by(find={"book_id": pending_book.id.value}, sort_by="requested_at", descending=True), None):
