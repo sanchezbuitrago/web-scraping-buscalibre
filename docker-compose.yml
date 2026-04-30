@@ -5,7 +5,7 @@ services:
     container_name: mongodb_buscalibre_scrapper
     image: mongo:latest
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 
@@ -25,6 +25,7 @@ services:
 
   api:
     container_name: api_buscalibre_scraper
+    shm_size: '2gb'
     build: .
     command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
     ports:
@@ -37,6 +38,7 @@ services:
 
   scraper:
     container_name: buscalibre_scraper
+    shm_size: '2gb'
     build: .
     # Aquí ejecutas tu script de Selenium
     command: python book_price_scraper.py

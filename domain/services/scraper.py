@@ -31,6 +31,10 @@ class BuscaLibreScraper:
         options.add_argument(
             "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         )
+        options.add_argument("--disable-dev-shm-usage")  # Fuerza a Chrome a usar /tmp en lugar de /dev/shm
+        options.add_argument("--disable-gpu")  # Recomendado en servidores sin tarjeta gráfica
+        options.add_argument("--window-size=1920,1080")  # Define un tamaño fijo para evitar errores de renderizado
+        options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
 
         driver = webdriver.Chrome(options=options)
         wait = WebDriverWait(driver, 15)
@@ -64,6 +68,10 @@ class BuscaLibreScraper:
         options.add_argument(
             "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         )
+        options.add_argument("--disable-dev-shm-usage")  # Fuerza a Chrome a usar /tmp en lugar de /dev/shm
+        options.add_argument("--disable-gpu")  # Recomendado en servidores sin tarjeta gráfica
+        options.add_argument("--window-size=1920,1080")  # Define un tamaño fijo para evitar errores de renderizado
+        options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
 
         driver = webdriver.Chrome(options=options)
         wait = WebDriverWait(driver, 15)
