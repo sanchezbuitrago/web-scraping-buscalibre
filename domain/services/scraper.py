@@ -95,9 +95,9 @@ class BuscaLibreScraper:
                 book_id=book_id,
                 title=nombre,
                 author=autor,
-                price=decimal.Decimal(precio_original),
+                price=decimal.Decimal(precio_original) if precio_original else precio_actual,
                 discounted_price=precio_actual,
-                discount=int(descuento),
+                discount=int(descuento) if descuento else 0,
                 requested_at=datetime.datetime.now(zoneinfo.ZoneInfo("America/Bogota")),
             )
 
@@ -132,20 +132,20 @@ class BuscaLibreScraper:
             raise Exception("Precio no encontrado")
 
     @staticmethod
-    def _get_current_price(driver: webdriver.Chrome) -> decimal.Decimal:
+    def _get_current_price(driver: webdriver.Chrome) -> decimal.Decimal | None:
         try:
             precio_original_texto = driver.find_element(By.CSS_SELECTOR, ".colPrecio .pvp").text
             precio_original = re.sub(r'\D', '', precio_original_texto)
             return decimal.Decimal(precio_original)
         except:
-            raise Exception("Precio original no encontrado")
+            return None
 
     @staticmethod
-    def _get_discount(driver: webdriver.Chrome) -> int:
+    def _get_discount(driver: webdriver.Chrome) -> int | None:
         # Descuento
         try:
             descuento_texto = driver.find_element(By.CSS_SELECTOR, ".colDescuento span").text
             descuento = re.sub(r'\D', '', descuento_texto)
             return int(descuento)
         except:
-            raise Exception("Descuento no encontrado")
+            return None
