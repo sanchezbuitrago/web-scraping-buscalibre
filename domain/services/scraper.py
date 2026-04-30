@@ -37,13 +37,14 @@ class BuscaLibreScraper:
         options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
 
         driver = webdriver.Chrome(options=options)
+        driver.set_page_load_timeout(60)
         wait = WebDriverWait(driver, 15)
 
         try:
             driver.get(url)
 
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-            time.sleep(5)
+            time.sleep(3)
 
             nombre = self._get_title(driver=driver)
             autor = self._get_author(driver=driver)
@@ -74,13 +75,14 @@ class BuscaLibreScraper:
         options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
 
         driver = webdriver.Chrome(options=options)
+        driver.set_page_load_timeout(60)
         wait = WebDriverWait(driver, 15)
 
         try:
             driver.get(url)
 
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-            time.sleep(5)
+            time.sleep(3)
 
             nombre = self._get_title(driver=driver)
             autor = self._get_author(driver=driver)
