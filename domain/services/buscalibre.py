@@ -44,7 +44,7 @@ def buscalibre_price_tracker(
 
         if book_last_price := next(_BOOK_HISTORY_REPOSITORY.find_by(find={"book_id": pending_book.id.value}, sort_by="requested_at", descending=True), None):
             if book_last_price.price != book_info.price or book_last_price.discounted_price != book_info.discounted_price or book_last_price.discount != book_info.discount:
-                pending_book.calculate_price_by_price_history(price_history_item=book_last_price)
+                pending_book.calculate_price_by_price_history(price_history_item=book_info)
                 print("Saving price for book: ", pending_book.id)
                 _BOOKS_REPOSITORY.save(new_item=pending_book)
                 _BOOK_HISTORY_REPOSITORY.save(new_item=book_info)
