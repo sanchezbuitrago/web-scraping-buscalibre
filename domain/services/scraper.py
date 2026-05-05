@@ -35,6 +35,7 @@ class BuscaLibreScraper:
         options.add_argument("--disable-gpu")  # Recomendado en servidores sin tarjeta gráfica
         options.add_argument("--window-size=1920,1080")  # Define un tamaño fijo para evitar errores de renderizado
         options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
+        options.add_argument("--incognito")
 
         driver = webdriver.Chrome(options=options)
         driver.set_page_load_timeout(60)
@@ -73,6 +74,7 @@ class BuscaLibreScraper:
         options.add_argument("--disable-gpu")  # Recomendado en servidores sin tarjeta gráfica
         options.add_argument("--window-size=1920,1080")  # Define un tamaño fijo para evitar errores de renderizado
         options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
+        options.add_argument("--incognito")
 
         driver = webdriver.Chrome(options=options)
         driver.set_page_load_timeout(60)
