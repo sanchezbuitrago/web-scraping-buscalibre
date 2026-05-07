@@ -29,6 +29,7 @@ class Book(base_types.Aggregate):
     price_history_items: int
     last_updated_at: datetime.datetime
     created_at: datetime.datetime
+    price_score: decimal.Decimal | None = None
     book_with_error: bool = False
     error_detail: str = ""
 
@@ -71,9 +72,15 @@ class Book(base_types.Aggregate):
             self.price_history_items = self.price_history_items + 1
             self.last_updated_at = datetime.datetime.now()
             self.average_price = self._calculate_new_average(current_price=price_history_item.discounted_price)
-
+        self.price_score = self._get_price_score()
         self.book_with_error = False
         self.error_detail = ""
 
     def _calculate_new_average(self, current_price: decimal.Decimal) -> decimal.Decimal:
         return self.average_price + ((current_price-self.average_price)/self.price_history_items)
+
+    def _get_price_score(self) -> decimal.Decimal:
+        score_range = (self.current_price - self.min_price) / (self.max_price - self.min_price)
+        average_score = (self.current_price - self.average_price) / self.average_price
+
+        return (decimal.Decimal(0.7) * score_range) + (decimal.Decimal(0.3) * average_score)

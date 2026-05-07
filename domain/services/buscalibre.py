@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from domain.model import buscalibre, commands
+from domain.model import buscalibre, commands, dtos
 from domain.services import provider, scraper as scraper_service
 from commons import unit_of_work
 
@@ -63,8 +63,8 @@ def buscalibre_price_tracker(
         #         print(f"Se consulto nueva informacion sobre el libro: {book.id.value}")
         #         print(item.model_dump())
 
-def get_books(uow: unit_of_work.AbstractUnitOfWork) -> commands.GetBooksResponse:
+def get_books(cmd: commands.GetBooksCommand, uow: unit_of_work.AbstractUnitOfWork) -> dtos.GetBooksResponse:
     _BOOKS_REPOSITORY = uow.get_repo(entity_type=buscalibre.Book)
-    books = list(_BOOKS_REPOSITORY.get_all(descending=True, limit=100, sort_by="last_updated_date"))
+    books = list(_BOOKS_REPOSITORY.get_all(descending=True, limit=100, sort_by=cmd.order_by or "last_updated_date"))
 
-    return commands.GetBooksResponse(books=books, count=len(books))
+    return dtos.GetBooksResponse(books=books, count=len(books))
