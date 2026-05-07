@@ -65,6 +65,6 @@ def buscalibre_price_tracker(
 
 def get_books(cmd: commands.GetBooksCommand, uow: unit_of_work.AbstractUnitOfWork) -> dtos.GetBooksResponse:
     _BOOKS_REPOSITORY = uow.get_repo(entity_type=buscalibre.Book)
-    books = list(_BOOKS_REPOSITORY.get_all(descending=True, limit=100, sort_by=cmd.order_by or "last_updated_date"))
+    books = list(_BOOKS_REPOSITORY.get_all(descending=cmd.descending or False, limit=100, sort_by=cmd.order_by or "last_updated_date"))
 
     return dtos.GetBooksResponse(books=books, count=len(books))
