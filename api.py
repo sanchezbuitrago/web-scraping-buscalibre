@@ -20,8 +20,11 @@ def read_root():
 
 
 @app.get("/books")
-def get_books():
-    response = buscalibre.get_books(uow=_UOW)
+def get_books(order_by: str | None = None):
+    response = buscalibre.get_books(
+        uow=_UOW,
+        cmd=commands.GetBooksCommand(order_by=order_by)
+    )
     return response.model_dump()
 
 

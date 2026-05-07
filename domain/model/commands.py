@@ -1,5 +1,4 @@
 from commons import base_types
-from domain.model.buscalibre import Book
 
 
 class GetBooksCommand(base_types.ValueObject):
