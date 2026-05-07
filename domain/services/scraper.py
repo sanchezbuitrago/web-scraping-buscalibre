@@ -23,9 +23,13 @@ _SETTINGS = _Settings()
 
 class BuscaLibreScraper:
 
-    def scrape_book(self, url: str) -> buscalibre.Book:
+    def __init__(self) -> None:
+        self.driver = self._create_driver()
+
+    @staticmethod
+    def _create_driver() -> webdriver.Chrome:
         options = Options()
-        options.add_argument("--headless=new")
+        options.add_argument("--headless=new")  # Quitar esta bandera para ver el proceso en UI
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument(
@@ -39,16 +43,21 @@ class BuscaLibreScraper:
 
         driver = webdriver.Chrome(options=options)
         driver.set_page_load_timeout(60)
-        wait = WebDriverWait(driver, 15)
+
+        return driver
+
+    def scrape_book(self, url: str) -> buscalibre.Book:
+
+        wait = WebDriverWait(self.driver, 15)
 
         try:
-            driver.get(url)
+            self.driver.get(url)
 
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
             time.sleep(3)
 
-            nombre = self._get_title(driver=driver)
-            autor = self._get_author(driver=driver)
+            nombre = self._get_title(driver=self.driver)
+            autor = self._get_author(driver=self.driver)
 
             return buscalibre.Book.create(
                 title=nombre, author=autor, link=url
@@ -56,41 +65,23 @@ class BuscaLibreScraper:
 
         except Exception as e:
             print("Error real:", repr(e))
+            self.driver = self._create_driver()
             raise Exception("Error obteniedo data")# 👈 esto da mejor debug
 
-        finally:
-            driver.quit()
-
     def scrape_book_price_history(self, url: str, book_id: str) -> buscalibre.BookPriceHistory:
-        options = Options()
-        if _SETTINGS.headless:
-            options.add_argument("--headless=new")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument(
-            "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-        )
-        options.add_argument("--disable-dev-shm-usage")  # Fuerza a Chrome a usar /tmp en lugar de /dev/shm
-        options.add_argument("--disable-gpu")  # Recomendado en servidores sin tarjeta gráfica
-        options.add_argument("--window-size=1920,1080")  # Define un tamaño fijo para evitar errores de renderizado
-        options.add_argument("--remote-debugging-pipe")  # A veces ayuda con errores de comunicación en Docker
-        options.add_argument("--incognito")
-
-        driver = webdriver.Chrome(options=options)
-        driver.set_page_load_timeout(60)
-        wait = WebDriverWait(driver, 15)
+        wait = WebDriverWait(self.driver, 15)
 
         try:
-            driver.get(url)
+            self.driver.get(url)
 
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
             time.sleep(3)
 
-            nombre = self._get_title(driver=driver)
-            autor = self._get_author(driver=driver)
-            precio_actual = self._get_discounted_price(driver=driver)
-            precio_original = self._get_current_price(driver=driver)
-            descuento = self._get_discount(driver=driver)
+            nombre = self._get_title(driver=self.driver)
+            autor = self._get_author(driver=self.driver)
+            precio_actual = self._get_discounted_price(driver=self.driver)
+            precio_original = self._get_current_price(driver=self.driver)
+            descuento = self._get_discount(driver=self.driver)
 
             return buscalibre.BookPriceHistory(
                 id=base_types.HumanFriendlyId(),
@@ -105,10 +96,8 @@ class BuscaLibreScraper:
 
         except Exception as e:
             print("Error real:", repr(e))
+            self.driver = self._create_driver()
             raise Exception("Error obteniedo data")# 👈 esto da mejor debug
-
-        finally:
-            driver.quit()
 
     @staticmethod
     def _get_title(driver: webdriver.Chrome) -> str:
