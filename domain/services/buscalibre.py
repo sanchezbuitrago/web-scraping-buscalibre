@@ -9,7 +9,7 @@ _DEFAULT_RETENTION_TIME_LINKS = timedelta(minutes=30)
 
 books_provider = provider.BookProvider(retention_time=_DEFAULT_RETENTION_TIME_LINKS)
 
-def create_book(uow: unit_of_work.AbstractUnitOfWork, scraper: scraper_service.BuscaLibreScraper, cmd: commands.CreateBookRequestBody) -> commands.Book:
+def create_book(uow: unit_of_work.AbstractUnitOfWork, scraper: scraper_service.BuscaLibreScraper, cmd: commands.CreateBookRequestBody) -> buscalibre.Book:
     _BOOKS_REPOSITORY = uow.get_repo(entity_type=buscalibre.Book)
     book = next(_BOOKS_REPOSITORY.find_by(find={"link": cmd.link}, sort_by="created_at", descending=True), None)
     if book is None:
